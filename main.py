@@ -5,7 +5,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 from time import sleep
 import cv2
-from multiprocessing import Process
+from concurrent.futures import ThreadPoolExecutor
 
 camera = PiCamera()
 sticker = Sticker()
@@ -16,18 +16,13 @@ while True:
     rawCapture = PiRGBArray(camera)
     camera.capture(rawCapture, format="bgr")
     image = rawCapture.array
-    p_darknet = Process(target=darknet.detect, args=(image))
-    p_sticker = Process(target=sticker.find_sticker, args=(image))
-    p_qr = Process(target=qr.scan, args=(image))
-    p_darknet.start()
-    p_sticker.start()
-    p_qr.start()
-    p_darknet.join()
-    p_sticker.join()
-    p_qr.join()
-    print("Darknet:")
-    print(p_darknet.get()[0])
-    print("Sticker:")
-    print(p_sticker.get())
-    print("QR:")
-    print(p_qr.get())
+    with ThreadPoolExecutor() as executor:
+        p_darknet = executor.submit(darknet.detect, image)
+        p_sticker = executor.submit(sticker.find_sticker, image)
+        p_qr = executor.submit(qr.scan, image)
+        print("Darknet:")
+        print(p_darknet.result()[0])
+        print("Sticker:")
+        print(p_sticker.result())
+        print("QR:")
+        print(p_qr.result())
