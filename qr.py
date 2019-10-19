@@ -16,3 +16,5 @@ class QR:
             f_y = y+(h/2)
             yield (f_x,f_y,barcodeData)
 
+
+

@@ -30,7 +30,7 @@ def explore():
 
                 p_darknet = executor.submit(darknet.detect, image)
                 p_sticker = executor.submit(sticker.find_sticker, image)
-                p_qr = executor.submit(qr.scan, image)
+                p_qr = executor.submit(qr.scan, image) 
 
                 if not is_guide_engaged:
                     print("{} Darknet:".format(iter))
@@ -60,7 +60,53 @@ def explore():
 
 
 def do_something(text):
-    print(text)
+    if text=="QR":
+        points = []
+        while True:
+            rawCapture = PiRGBArray(camera)
+            camera.capture(rawCapture, format="bgr")
+            image = rawCapture.array
+            x,y,_ = qr.scan(image)
+            blank_image = np.zeros((image.shape[0], image.shape[1], 3))
+            cv2.circle(blank_image, (int(x), int(y)), 20 ,(0, 0, 255), 2)
+            cv2.circle(blank_image, (int(x), int(y)), 5, (0, 255, 0), -1)
+            points.append((x,y))
+            text = ""
+            Height, Width = image.shape[:2]
+            fifteen_per = 0.40*(Width/2)
+            centre_region_begin = Width/2-fifteen_per
+            centre_region_end = Width/2+fifteen_per
+            centre_region_begin_part2 = Width/2-2*fifteen_per
+            centre_region_end_part2 = Width/2+2*fifteen_per
+            if x==None or y==None:
+                if len(points)!=0:
+                    (x,y) = points[-1]
+                    if int(x)>centre_region_begin and int(x)<=centre_region_end:
+                        text = "NO CHANGE"
+                    elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
+                        text = "RIGHT"
+                    elif int(x)>centre_region_end_part2:
+                        text = "MORE RIGHT"
+                    elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
+                        text = "LEFT"
+                    elif int(x)<centre_region_begin_part2:
+                        text = "MORE LEFT"
+                    tts.play_audio(text)
+            else:
+                if int(x)>centre_region_begin and int(x)<=centre_region_end:
+                    text = "NO CHANGE"
+                elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
+                    text = "RIGHT"
+                elif int(x)>centre_region_end_part2:
+                    text = "MORE RIGHT"
+                elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
+                    text = "LEFT"
+                elif int(x)<centre_region_begin_part2:
+                    text = "MORE LEFT"
+                tts.play_audio(text)
+            cv2.imshow("Object Tracker", blank_image)
+            if cv2.waitKey(1) == 13: #13 is the Enter Key
+                break
     sleep(10)
 
 with ThreadPoolExecutor() as executor:
