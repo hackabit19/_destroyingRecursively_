@@ -41,7 +41,7 @@ class STT:
 
         stream.stop_stream()
         stream.close()
-        self.audio.terminate()
+        # self.audio.terminate()
 
         wavefile = wave.open(self.wav_output_filename, 'wb')
         wavefile.setnchannels(self.chans)

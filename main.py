@@ -20,11 +20,13 @@ found_items = []
 
 def explore():
     iter = 1
-    while True:
-        rawCapture = PiRGBArray(camera)
-        camera.capture(rawCapture, format="bgr")
-        image = rawCapture.array
-        with ThreadPoolExecutor() as executor:
+    with ThreadPoolExecutor() as executor:
+        while True:
+            sleep(0.5)
+            rawCapture = PiRGBArray(camera)
+            camera.capture(rawCapture, format="bgr")
+            image = rawCapture.array
+        
             p_darknet = executor.submit(darknet.detect, image)
             p_sticker = executor.submit(sticker.find_sticker, image)
             p_qr = executor.submit(qr.scan, image)
@@ -57,6 +59,7 @@ def do_something(text):
 with ThreadPoolExecutor() as executor:
     explore_thread = executor.submit(explore)
     while True:
+        sleep(1)
         print("Starting New Record")
         text = stt.voice_recognize(3)
         print("Ended Record")
