@@ -17,16 +17,16 @@ class Sticker:
     def __init__(self, *args, **kwargs):
         # define range of green color in HSV
         self.lower_green = np.array([45, 50, 50])
-        self.upper_green = np.array([75, 200, 200])
+        self.upper_green = np.array([75, 255, 255])
         # define range of red color in HSV
         self.lower_red = np.array([0, 50, 50])
-        self.upper_red = np.array([15, 200, 200])
+        self.upper_red = np.array([15, 255, 255])
         # define range of blue color in HSV
         self.lower_blue = np.array([105, 50, 50])
-        self.upper_blue = np.array([125, 200, 200])
+        self.upper_blue = np.array([125, 255, 255])
         # define range of yellow color in HSV
         self.lower_yellow = np.array([22, 50, 50])
-        self.upper_yellow = np.array([32, 200, 200])
+        self.upper_yellow = np.array([32, 255, 255])
 
     def find_sticker(self, frame, show_image=False):
         #if show_image:
