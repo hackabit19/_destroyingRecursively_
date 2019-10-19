@@ -1,5 +1,6 @@
 import cv2
 import argparse
+import os
 import numpy as np
 
 # handle command line arguments
@@ -17,8 +18,12 @@ import numpy as np
 # image = cv2.imread(args.image)
 class Darknet:
     def __init__(self):
-        pass
-    
+        darknet_path = "/home/pi/darknet-nnpack"
+        self.classes = os.path.join(darknet_path, "yolov3-tiny.txt")
+        self.weights = os.path.join(darknet_path, "yolov3-tiny.weights")
+        self.cfg = os.path.join(darknet_path, "cfg", "yolov3-tiny.cfg")
+        self.threshold = 0.3
+
     def detect(self, image):
         Width = image.shape[1]
         Height = image.shape[0]
@@ -26,14 +31,14 @@ class Darknet:
 
         # read class names from text file
         classes = None
-        with open("yolov3-tiny.txt", 'r') as f:
+        with open(self.classes, 'r') as f:
             classes = [line.strip() for line in f.readlines()]
 
         # generate different colors for different classes 
         COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
 
         # read pre-trained model and config file
-        net = cv2.dnn.readNet("yolov3-tiny.weights", "yolov3-tiny.cfg")
+        net = cv2.dnn.readNet(self.weights, self.cfg)
 
         # create input blob 
         blob = cv2.dnn.blobFromImage(image, scale, (416,416), (0,0,0), True, crop=False)
@@ -44,7 +49,7 @@ class Darknet:
         # in the architecture
         def get_output_layers(net):
             layer_names = net.getLayerNames()
-            output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()
+            output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
             return output_layers
 
         # function to draw bounding box on the detected object with class name
@@ -61,6 +66,7 @@ class Darknet:
         class_ids = []
         confidences = []
         boxes = []
+        centers = []
         conf_threshold = 0.5
         nms_threshold = 0.4
 
@@ -72,9 +78,10 @@ class Darknet:
                 scores = detection[5:]
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
-                if confidence > 0.5:
+                if confidence > self.threshold:
                     center_x = int(detection[0] * Width)
                     center_y = int(detection[1] * Height)
+                    centers.append((center_x, center_y))
                     w = int(detection[2] * Width)
                     h = int(detection[3] * Height)
                     x = center_x - w / 2
@@ -96,13 +103,5 @@ class Darknet:
             h = box[3]
             
             draw_bounding_box(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
-
-        # display output image    
-        cv2.imshow("object detection", image)
-
-        # wait until any key is pressed
-        cv2.waitKey()
             
-        # release resources
-        cv2.destroyAllWindows()
-        print(indices)
+        return [(str(classes[class_ids[i]]), confidences[i], centers[i]) for i in range(len(class_ids))], image
