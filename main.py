@@ -71,24 +71,33 @@ def do_something(text):
             rawCapture = PiRGBArray(camera)
             camera.capture(rawCapture, format="bgr")
             image = rawCapture.array
-            x=0.0
-            y=0.0
-            for x1,y1,_1 in qr.scan(image):
-                x=x1,y=y1
-                break
-            cv2.circle(blank_image, (int(x), int(y)), 20 ,(0, 0, 255), 2)
-            cv2.circle(blank_image, (int(x), int(y)), 5, (0, 255, 0), -1)
-            points.append((x,y))
-            text = ""
-            Height, Width = image.shape[:2]
-            fifteen_per = 0.40*(Width/2)
-            centre_region_begin = Width/2-fifteen_per
-            centre_region_end = Width/2+fifteen_per
-            centre_region_begin_part2 = Width/2-2*fifteen_per
-            centre_region_end_part2 = Width/2+2*fifteen_per
-            if x==None or y==None:
-                if len(points)!=0:
-                    (x,y) = points[-1]
+            for x,y,_ in qr.scan(image):
+                cv2.circle(blank_image, (int(x), int(y)), 20 ,(0, 0, 255), 2)
+                cv2.circle(blank_image, (int(x), int(y)), 5, (0, 255, 0), -1)
+                points.append((x,y))
+                text = ""
+                Height, Width = image.shape[:2]
+                fifteen_per = 0.40*(Width/2)
+                centre_region_begin = Width/2-fifteen_per
+                centre_region_end = Width/2+fifteen_per
+                centre_region_begin_part2 = Width/2-2*fifteen_per
+                centre_region_end_part2 = Width/2+2*fifteen_per
+                if x==None or y==None:
+                    if len(points)!=0:
+                        (x,y) = points[-1]
+                        if int(x)>centre_region_begin and int(x)<=centre_region_end:
+                            text = "NO CHANGE"
+                        elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
+                            text = "RIGHT"
+                        elif int(x)>centre_region_end_part2:
+                            text = "MORE RIGHT"
+                        elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
+                            text = "LEFT"
+                        elif int(x)<centre_region_begin_part2:
+                            text = "MORE LEFT"
+                        #tts.play_audio(text)
+                        cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
+                else:
                     if int(x)>centre_region_begin and int(x)<=centre_region_end:
                         text = "NO CHANGE"
                     elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
@@ -99,24 +108,13 @@ def do_something(text):
                         text = "LEFT"
                     elif int(x)<centre_region_begin_part2:
                         text = "MORE LEFT"
-                    #tts.play_audio(text)
                     cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
-            else:
-                if int(x)>centre_region_begin and int(x)<=centre_region_end:
-                    text = "NO CHANGE"
-                elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
-                    text = "RIGHT"
-                elif int(x)>centre_region_end_part2:
-                    text = "MORE RIGHT"
-                elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
-                    text = "LEFT"
-                elif int(x)<centre_region_begin_part2:
-                    text = "MORE LEFT"
-                cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
-                #tts.play_audio(text)
-            cv2.imshow("Object Tracker", blank_image)
-            if cv2.waitKey(1) == 13: #13 is the Enter Key
+                    #tts.play_audio(text)
+                cv2.imshow("Object Tracker", blank_image)
+                if cv2.waitKey(1) == 13: #13 is the Enter Key
+                    break
                 break
+            
 
 with ThreadPoolExecutor() as executor:
     explore_thread = executor.submit(explore)
