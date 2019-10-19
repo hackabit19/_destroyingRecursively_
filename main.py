@@ -57,7 +57,9 @@ def do_something(text):
 with ThreadPoolExecutor() as executor:
     explore_thread = executor.submit(explore)
     while True:
+        print("Starting New Record")
         text = stt.voice_recognize(3)
+        print("Ended Record")
         if len(text) > 0:
             tts.play_audio("Ok I'll guide you to {}".format(text))
             guide_thread = executor.submit(do_something, text)
