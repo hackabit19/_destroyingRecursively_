@@ -80,8 +80,8 @@ def qr_handler():
     rawCapture = PiRGBArray(camera)
     camera.capture(rawCapture, format="bgr")
     image = rawCapture.array
-    blank_image = np.zeros((image.shape[0], image.shape[1], 3))
     while True:
+        blank_image = np.zeros((image.shape[0], image.shape[1], 3))
         rawCapture = PiRGBArray(camera)
         camera.capture(rawCapture, format="bgr")
         image = rawCapture.array
