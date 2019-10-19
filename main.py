@@ -67,7 +67,9 @@ def do_something(text):
             rawCapture = PiRGBArray(camera)
             camera.capture(rawCapture, format="bgr")
             image = rawCapture.array
-            (x,y,_) = qr.scan(image)
+            for x1,y1,_1 in qr.scan(image):
+                x=x1,y=y1,_=_1
+                break
             blank_image = np.zeros((image.shape[0], image.shape[1], 3))
             cv2.circle(blank_image, (int(x), int(y)), 20 ,(0, 0, 255), 2)
             cv2.circle(blank_image, (int(x), int(y)), 5, (0, 255, 0), -1)
