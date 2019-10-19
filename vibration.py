@@ -30,5 +30,6 @@ class Vibrators:
         self.rightPwm.ChangeDutyCycle(magnitude)
 
     def set_profile(self, profile):
-        self.set_left(self.profiles[profile][0])
-        self.set_right(self.profiles[profile][1])
+        if profile in self.profiles:
+            self.set_left(self.profiles[profile][0])
+            self.set_right(self.profiles[profile][1])

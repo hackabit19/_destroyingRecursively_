@@ -1,4 +1,4 @@
-from darknet import Darknet
+rom darknet import Darknet
 from qr import QR 
 from sticker import Sticker
 from picamera.array import PiRGBArray
@@ -35,6 +35,10 @@ def qr_handler():
             centre_region_end = Width/2+fifteen_per
             centre_region_begin_part2 = Width/2-2*fifteen_per
             centre_region_end_part2 = Width/2+2*fifteen_per
+            fifteen_up = 0.40*(Height/2)
+            centre_upper = Height/2+fifteen_up
+            centre_down = Height/2-fifteen_up
+            change = 0
             if x==None or y==None:
                 if len(points)!=0:
                     (x,y) = points[-1]
@@ -42,12 +46,26 @@ def qr_handler():
                         text = "NO CHANGE"
                     elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
                         text = "RIGHT"
+                        change=1
                     elif int(x)>centre_region_end_part2:
                         text = "MORE RIGHT"
+                        change=1
                     elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
                         text = "LEFT"
+                        change=1
                     elif int(x)<centre_region_begin_part2:
                         text = "MORE LEFT"
+                        change=1
+                    if change==1:
+                        if int(y)>centre_upper:
+                            text+=" AND UP"
+                        elif int(y)<centre_down:
+                            text+=" AND DOWN"
+                    if change==0:
+                        if int(y)>centre_upper:
+                            text+="UP"
+                        elif int(y)<centre_down:
+                            text+="DOWN"
                     print(text)
                     vibrators.set_profile(text)
                     tts.play_audio(text)
@@ -60,12 +78,26 @@ def qr_handler():
                     text = "RIGHT"
                     vibrators.set_left(vibrators.OFF)
                     vibrators.set_right(vibrators.OFF)
+                    change=1
                 elif int(x)>centre_region_end_part2:
                     text = "MORE RIGHT"
+                    change=1
                 elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
                     text = "LEFT"
+                    change=1
                 elif int(x)<centre_region_begin_part2:
                     text = "MORE LEFT"
+                    change=1
+                if change==1:
+                    if int(y)>centre_upper:
+                        text+=" AND UP"
+                    elif int(y)<centre_down:
+                        text+=" AND DOWN"
+                if change==0:
+                    if int(y)>centre_upper:
+                        text+="UP"
+                    elif int(y)<centre_down:
+                        text+="DOWN"
                 print(text)
                 vibrators.set_profile(text)
                 tts.play_audio(text)
@@ -89,6 +121,10 @@ def sticker_handler():
         centre_region_end = Width/2+fifteen_per
         centre_region_begin_part2 = Width/2-2*fifteen_per
         centre_region_end_part2 = Width/2+2*fifteen_per
+        fifteen_up = 0.40*(Height/2)
+        centre_upper = Height/2+fifteen_up
+        centre_down = Height/2-fifteen_up
+        change = 0
         if x==None or y==None:
             if len(points)!=0:
                 (x,y) = points[-1]
@@ -96,26 +132,58 @@ def sticker_handler():
                     text = "NO CHANGE"
                 elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
                     text = "RIGHT"
+                    change=1
                 elif int(x)>centre_region_end_part2:
                     text = "MORE RIGHT"
+                    change=1
                 elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
                     text = "LEFT"
+                    change=1
                 elif int(x)<centre_region_begin_part2:
                     text = "MORE LEFT"
+                    change=1
+                if change==1:
+                    if int(y)>centre_upper:
+                        text+=" AND UP"
+                    elif int(y)<centre_down:
+                        text+=" AND DOWN"
+                if change==0:
+                    if int(y)>centre_upper:
+                        text+="UP"
+                    elif int(y)<centre_down:
+                        text+="DOWN"
                 print(text)
                 vibrators.set_profile(text)
                 tts.play_audio(text)
         else:
             if int(x)>centre_region_begin and int(x)<=centre_region_end:
                 text = "NO CHANGE"
+                vibrators.set_left(vibrators.OFF)
+                vibrators.set_right(vibrators.OFF)
             elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
                 text = "RIGHT"
+                vibrators.set_left(vibrators.OFF)
+                vibrators.set_right(vibrators.OFF)
+                change=1
             elif int(x)>centre_region_end_part2:
                 text = "MORE RIGHT"
+                change=1
             elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
                 text = "LEFT"
+                change=1
             elif int(x)<centre_region_begin_part2:
                 text = "MORE LEFT"
+                change=1
+            if change==1:
+                if int(y)>centre_upper:
+                    text+=" AND UP"
+                elif int(y)<centre_down:
+                    text+=" AND DOWN"
+            if change==0:
+                if int(y)>centre_upper:
+                    text+="UP"
+                elif int(y)<centre_down:
+                    text+="DOWN"
             print(text)
             vibrators.set_profile(text)
             tts.play_audio(text)
@@ -147,6 +215,10 @@ def yolo_handler(name):
         centre_region_end = Width/2+fifteen_per
         centre_region_begin_part2 = Width/2-2*fifteen_per
         centre_region_end_part2 = Width/2+2*fifteen_per
+        fifteen_up = 0.40*(Height/2)
+        centre_upper = Height/2+fifteen_up
+        centre_down = Height/2-fifteen_up
+        change = 0
         if x==None or y==None:
             if len(points)!=0:
                 (x,y) = points[-1]
@@ -154,26 +226,58 @@ def yolo_handler(name):
                     text = "NO CHANGE"
                 elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
                     text = "RIGHT"
+                    change=1
                 elif int(x)>centre_region_end_part2:
                     text = "MORE RIGHT"
+                    change=1
                 elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
                     text = "LEFT"
+                    change=1
                 elif int(x)<centre_region_begin_part2:
                     text = "MORE LEFT"
-                print(text)
-                vibrators.set_profile(text)
-                tts.play_audio(text)
-        else:
-            if int(x)>centre_region_begin and int(x)<=centre_region_end:
-                text = "NO CHANGE"
-            elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
-                text = "RIGHT"
-            elif int(x)>centre_region_end_part2:
-                text = "MORE RIGHT"
-            elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
-                text = "LEFT"
-            elif int(x)<centre_region_begin_part2:
-                text = "MORE LEFT"
+                    change=1
+                if change==1:
+                    if int(y)>centre_upper:
+                        text+=" AND UP"
+                    elif int(y)<centre_down:
+                        text+=" AND DOWN"
+                if change==0:
+                    if int(y)>centre_upper:
+                        text+="UP"
+                    elif int(y)<centre_down:
+                        text+="DOWN"
+                    print(text)
+                    vibrators.set_profile(text)
+                    tts.play_audio(text)
+            else:
+                if int(x)>centre_region_begin and int(x)<=centre_region_end:
+                    text = "NO CHANGE"
+                    vibrators.set_left(vibrators.OFF)
+                    vibrators.set_right(vibrators.OFF)
+                elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
+                    text = "RIGHT"
+                    vibrators.set_left(vibrators.OFF)
+                    vibrators.set_right(vibrators.OFF)
+                    change=1
+                elif int(x)>centre_region_end_part2:
+                    text = "MORE RIGHT"
+                    change=1
+                elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
+                    text = "LEFT"
+                    change=1
+                elif int(x)<centre_region_begin_part2:
+                    text = "MORE LEFT"
+                    change=1
+                if change==1:
+                    if int(y)>centre_upper:
+                        text+=" AND UP"
+                    elif int(y)<centre_down:
+                        text+=" AND DOWN"
+                if change==0:
+                    if int(y)>centre_upper:
+                        text+="UP"
+                    elif int(y)<centre_down:
+                        text+="DOWN"
             print(text)
             vibrators.set_profile(text)
             tts.play_audio(text)
