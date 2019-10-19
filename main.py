@@ -60,6 +60,7 @@ def explore():
 
 
 def do_something(text):
+    sleep(2)
     if text=="QR":
         points = []
         while True:
