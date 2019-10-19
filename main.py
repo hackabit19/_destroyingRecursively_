@@ -120,10 +120,15 @@ def yolo_handler(name):
         x=0
         y=0
         arr, img = darknet.detect(image)
+        flag = 0
         for (searched,_,cen) in arr:
-            if searched==name:
+            if searched == name:
                 (x,y) = cen
+                flag = 1
                 break
+        if flag == 0:
+            print("Name not found")
+            exit(-1)
         points.append((x,y))
         text = ""
         Height, Width = image.shape[:2]
