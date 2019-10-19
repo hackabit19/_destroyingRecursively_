@@ -9,6 +9,7 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from text_to_speech import TTS
 from speech_to_text import STT
+from vibration import Vibrators
 
 camera = PiCamera()
 sticker = Sticker()
@@ -16,6 +17,7 @@ darknet = Darknet()
 qr = QR()
 tts = TTS()
 stt = STT()
+vibrators = Vibrators()
             
 def qr_handler():
     print("QR Handler")
@@ -47,12 +49,17 @@ def qr_handler():
                     elif int(x)<centre_region_begin_part2:
                         text = "MORE LEFT"
                     print(text)
+                    vibrators.set_profile(text)
                     tts.play_audio(text)
             else:
                 if int(x)>centre_region_begin and int(x)<=centre_region_end:
                     text = "NO CHANGE"
+                    vibrators.set_left(vibrators.OFF)
+                    vibrators.set_right(vibrators.OFF)
                 elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
                     text = "RIGHT"
+                    vibrators.set_left(vibrators.OFF)
+                    vibrators.set_right(vibrators.OFF)
                 elif int(x)>centre_region_end_part2:
                     text = "MORE RIGHT"
                 elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
@@ -60,6 +67,7 @@ def qr_handler():
                 elif int(x)<centre_region_begin_part2:
                     text = "MORE LEFT"
                 print(text)
+                vibrators.set_profile(text)
                 tts.play_audio(text)
             break
 
@@ -95,6 +103,7 @@ def sticker_handler():
                 elif int(x)<centre_region_begin_part2:
                     text = "MORE LEFT"
                 print(text)
+                vibrators.set_profile(text)
                 tts.play_audio(text)
         else:
             if int(x)>centre_region_begin and int(x)<=centre_region_end:
@@ -108,10 +117,11 @@ def sticker_handler():
             elif int(x)<centre_region_begin_part2:
                 text = "MORE LEFT"
             print(text)
+            vibrators.set_profile(text)
             tts.play_audio(text)
 
 def yolo_handler(name):
-    print("Yolo Hanler {}".format(name))
+    print("Yolo Handler {}".format(name))
     points = []
     while True:
         rawCapture = PiRGBArray(camera)
@@ -151,6 +161,7 @@ def yolo_handler(name):
                 elif int(x)<centre_region_begin_part2:
                     text = "MORE LEFT"
                 print(text)
+                vibrators.set_profile(text)
                 tts.play_audio(text)
         else:
             if int(x)>centre_region_begin and int(x)<=centre_region_end:
@@ -164,6 +175,7 @@ def yolo_handler(name):
             elif int(x)<centre_region_begin_part2:
                 text = "MORE LEFT"
             print(text)
+            vibrators.set_profile(text)
             tts.play_audio(text)
 
 
