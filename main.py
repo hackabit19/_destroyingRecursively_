@@ -61,9 +61,9 @@ def explore():
 
 
 def do_something(text):
-    sleep(2)
     if text=="QR":
         points = []
+        blank_image = np.zeros((image.shape[0], image.shape[1], 3))
         while True:
             rawCapture = PiRGBArray(camera)
             camera.capture(rawCapture, format="bgr")
@@ -73,7 +73,6 @@ def do_something(text):
             for x1,y1,_1 in qr.scan(image):
                 x=x1,y=y1,_=_1
                 break
-            blank_image = np.zeros((image.shape[0], image.shape[1], 3))
             cv2.circle(blank_image, (int(x), int(y)), 20 ,(0, 0, 255), 2)
             cv2.circle(blank_image, (int(x), int(y)), 5, (0, 255, 0), -1)
             points.append((x,y))
@@ -97,7 +96,8 @@ def do_something(text):
                         text = "LEFT"
                     elif int(x)<centre_region_begin_part2:
                         text = "MORE LEFT"
-                    tts.play_audio(text)
+                    #tts.play_audio(text)
+                    cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
             else:
                 if int(x)>centre_region_begin and int(x)<=centre_region_end:
                     text = "NO CHANGE"
@@ -109,11 +109,11 @@ def do_something(text):
                     text = "LEFT"
                 elif int(x)<centre_region_begin_part2:
                     text = "MORE LEFT"
-                tts.play_audio(text)
+                cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
+                #tts.play_audio(text)
             cv2.imshow("Object Tracker", blank_image)
             if cv2.waitKey(1) == 13: #13 is the Enter Key
                 break
-    sleep(10)
 
 with ThreadPoolExecutor() as executor:
     explore_thread = executor.submit(explore)
