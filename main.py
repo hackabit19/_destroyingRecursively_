@@ -45,6 +45,8 @@ def explore():
                 print(x, y, data)
                 if data not in found_items:
                     found_items.append(data)
+            for name in found_items:
+                tts.play_audio(name)
 
             iter += 1
 
