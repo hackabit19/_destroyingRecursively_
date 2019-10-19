@@ -71,8 +71,8 @@ def do_something(text):
             rawCapture = PiRGBArray(camera)
             camera.capture(rawCapture, format="bgr")
             image = rawCapture.array
-            x=0
-            y=0
+            x=0.0
+            y=0.0
             for x1,y1,_1 in qr.scan(image):
                 x=x1,y=y1
                 break
