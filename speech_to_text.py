@@ -41,7 +41,7 @@ class STT:
 
         stream.stop_stream()
         stream.close()
-        # self.audio.terminate()
+        #self.audio.terminate()
 
         wavefile = wave.open(self.wav_output_filename, 'wb')
         wavefile.setnchannels(self.chans)
@@ -62,3 +62,9 @@ class STT:
             text += alternative.transcript
         os.remove(self.wav_output_filename)
         return text
+
+if __name__ ==  "__main__":
+    stt = STT()
+    print(stt.voice_recognize(3))
+    print(stt.voice_recognize(3))
+
