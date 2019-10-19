@@ -125,8 +125,8 @@ def qr_handler():
                 cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
                 #tts.play_audio(text)
             cv2.imshow("Object Tracker", blank_image)
-            if cv2.waitKey(1) == 13: #13 is the Enter Key
-                break
+            break
+        if cv2.waitKey(1) == 13: #13 is the Enter Key
             break
 
 def sticker_handler():
