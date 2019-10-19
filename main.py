@@ -16,64 +16,7 @@ darknet = Darknet()
 qr = QR()
 tts = TTS()
 stt = STT()
-
-
-# def do_something(text):
-#     if text=="QR":
-#         points = []
-#         rawCapture = PiRGBArray(camera)
-#         camera.capture(rawCapture, format="bgr")
-#         image = rawCapture.array
-#         blank_image = np.zeros((image.shape[0], image.shape[1], 3))
-#         while True:
-#             rawCapture = PiRGBArray(camera)
-#             camera.capture(rawCapture, format="bgr")
-#             image = rawCapture.array
-#             for x,y,_ in qr.scan(image):
-#                 cv2.circle(blank_image, (int(x), int(y)), 20 ,(0, 0, 255), 2)
-#                 cv2.circle(blank_image, (int(x), int(y)), 5, (0, 255, 0), -1)
-#                 points.append((x,y))
-#                 text = ""
-#                 Height, Width = image.shape[:2]
-#                 fifteen_per = 0.40*(Width/2)
-#                 centre_region_begin = Width/2-fifteen_per
-#                 centre_region_end = Width/2+fifteen_per
-#                 centre_region_begin_part2 = Width/2-2*fifteen_per
-#                 centre_region_end_part2 = Width/2+2*fifteen_per
-#                 if x==None or y==None:
-#                     if len(points)!=0:
-#                         (x,y) = points[-1]
-#                         if int(x)>centre_region_begin and int(x)<=centre_region_end:
-#                             text = "NO CHANGE"
-#                         elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
-#                             text = "RIGHT"
-#                         elif int(x)>centre_region_end_part2:
-#                             text = "MORE RIGHT"
-#                         elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
-#                             text = "LEFT"
-#                         elif int(x)<centre_region_begin_part2:
-#                             text = "MORE LEFT"
-#                         #tts.play_audio(text)
-#                         cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
-#                 else:
-#                     if int(x)>centre_region_begin and int(x)<=centre_region_end:
-#                         text = "NO CHANGE"
-#                     elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
-#                         text = "RIGHT"
-#                     elif int(x)>centre_region_end_part2:
-#                         text = "MORE RIGHT"
-#                     elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
-#                         text = "LEFT"
-#                     elif int(x)<centre_region_begin_part2:
-#                         text = "MORE LEFT"
-#                     cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
-#                     #tts.play_audio(text)
-#                 cv2.imshow("Object Tracker", blank_image)
-#                 if cv2.waitKey(1) == 13: #13 is the Enter Key
-#                     break
-#                 break
             
-
 def qr_handler():
     print("QR Handler")
     points = []
@@ -122,6 +65,51 @@ def qr_handler():
 
 def sticker_handler():
     print("Sticker Handler")
+    points = []
+    while True:
+        rawCapture = PiRGBArray(camera)
+        camera.capture(rawCapture, format="bgr")
+        image = rawCapture.array
+        z,x,y = sticker.find_sticker(image)
+        if z==False:
+            continue
+        points.append((x,y))
+        text = ""
+        Height, Width = image.shape[:2]
+        fifteen_per = 0.40*(Width/2)
+        centre_region_begin = Width/2-fifteen_per
+        centre_region_end = Width/2+fifteen_per
+        centre_region_begin_part2 = Width/2-2*fifteen_per
+        centre_region_end_part2 = Width/2+2*fifteen_per
+        if x==None or y==None:
+            if len(points)!=0:
+                (x,y) = points[-1]
+                if int(x)>centre_region_begin and int(x)<=centre_region_end:
+                    text = "NO CHANGE"
+                elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
+                    text = "RIGHT"
+                elif int(x)>centre_region_end_part2:
+                    text = "MORE RIGHT"
+                elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
+                    text = "LEFT"
+                elif int(x)<centre_region_begin_part2:
+                    text = "MORE LEFT"
+                print(text)
+                tts.play_audio(text)
+        else:
+            if int(x)>centre_region_begin and int(x)<=centre_region_end:
+                text = "NO CHANGE"
+            elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
+                text = "RIGHT"
+            elif int(x)>centre_region_end_part2:
+                text = "MORE RIGHT"
+            elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
+                text = "LEFT"
+            elif int(x)<centre_region_begin_part2:
+                text = "MORE LEFT"
+            print(text)
+            tts.play_audio(text)
+        break
 
 def yolo_handler(name):
     print("Yolo Hanler {}".format(name))
