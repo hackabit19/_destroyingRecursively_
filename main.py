@@ -119,7 +119,8 @@ def yolo_handler(name):
         image = rawCapture.array
         x=0
         y=0
-        for searched,_,cen in darknet.detect(image):
+        arr, img = darknet.detect(image)
+        for (searched,_,cen) in arr:
             if searched==name:
                 (x,y) = cen
                 break
