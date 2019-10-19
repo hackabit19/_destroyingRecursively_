@@ -5,6 +5,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 from time import sleep
 import cv2
+import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from text_to_speech import TTS
 from speech_to_text import STT
