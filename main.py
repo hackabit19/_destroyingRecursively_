@@ -77,17 +77,11 @@ stt = STT()
 def qr_handler():
     print("QR Handler")
     points = []
-    rawCapture = PiRGBArray(camera)
-    camera.capture(rawCapture, format="bgr")
-    image = rawCapture.array
     while True:
-        blank_image = np.zeros((image.shape[0], image.shape[1], 3))
         rawCapture = PiRGBArray(camera)
         camera.capture(rawCapture, format="bgr")
         image = rawCapture.array
         for x,y,_ in qr.scan(image):
-            cv2.circle(blank_image, (int(x), int(y)), 20 ,(0, 0, 255), 2)
-            cv2.circle(blank_image, (int(x), int(y)), 5, (0, 255, 0), -1)
             points.append((x,y))
             text = ""
             Height, Width = image.shape[:2]
@@ -109,8 +103,8 @@ def qr_handler():
                         text = "LEFT"
                     elif int(x)<centre_region_begin_part2:
                         text = "MORE LEFT"
-                    #tts.play_audio(text)
-                    cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
+                    print(text)
+                    tts.play_audio(text)
             else:
                 if int(x)>centre_region_begin and int(x)<=centre_region_end:
                     text = "NO CHANGE"
@@ -122,11 +116,8 @@ def qr_handler():
                     text = "LEFT"
                 elif int(x)<centre_region_begin_part2:
                     text = "MORE LEFT"
-                cv2.putText(blank_image, text, (int(x)+20, int(y)+20), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),2)
-                #tts.play_audio(text)
-            cv2.imshow("Object Tracker", blank_image)
-            break
-        if cv2.waitKey(1) == 13: #13 is the Enter Key
+                print(text)
+                tts.play_audio(text)
             break
 
 def sticker_handler():
