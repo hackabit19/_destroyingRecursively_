@@ -62,6 +62,3 @@ class STT:
             text += alternative.transcript
         os.remove(self.wav_output_filename)
         return text
-
-
-print(STT().voice_recognize(5))
