@@ -44,7 +44,6 @@ class Sticker:
         # Capture webcame frame
         hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         blank_image = np.zeros((frame.shape[0], frame.shape[1], 3))
-        print(blank_image.shape)
 
         # detection of each color begins
         # Threshold the HSV image to get only green color
@@ -123,17 +122,12 @@ class Sticker:
                             dis_yr = calDis(xy, xr, yy, yr)
                             dis_yb = calDis(xy, xb, yy, yb)
                             dis_rb = calDis(xr, xb, yr, yb)
-                            # print(dis_gy, dis_gr, dis_gb, dis_yr, dis_yb, dis_rb)
-                            # cv2.imshow("kuch bhi", blank_image)
-                            # cv2.waitKey(1000)
                             dist = 275
                             if dis_gy < dist and dis_gr < dist and dis_gb < dist and dis_yr < dist and dis_yb < dist and dis_rb < dist:
-                                print("YES")
                                 cv2.circle(blank_image, (int(xg), int(yg)), int(
                                     radius), (255, 255, 255), -1)
                                 if show_image:
                                     cv2.destroyAllWindows()
-                                    # sys.exit()
                                 centroid_x = (xg + xy + xr + xb) / 4
                                 centroid_y = (yg + yy + yr + yb) / 4
                                 return True, centroid_x, centroid_y
