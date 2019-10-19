@@ -25,7 +25,7 @@ while True:
         p_qr = executor.submit(qr.scan, image)
         print("{} Darknet:".format(iter))
         print(p_darknet.result()[0])
-        for name, _, _ in p_darknet()[0]:
+        for name, _, _ in p_darknet.result()[0]:
             tts.play_audio(name)
         print("{} Sticker:".format(iter))
         print(p_sticker.result())

@@ -25,5 +25,3 @@ class TTS:
             out.write(audio.audio_content)
         subprocess.Popen(['mpg123', '-q', "output.mp3"]).wait()
         os.remove("output.mp3")
-    
-TTS().play_audio("Hackabit")
