@@ -15,7 +15,7 @@ class STT:
         self.chans = 1
         self.samp_rate = 44100
         self.chunk = 4096
-        self.dev_index = 5
+        self.dev_index = 2
         self.wav_output_filename = 'recording.wav'
         self.language_code = "en-US"
         self.audio = pyaudio.PyAudio()
