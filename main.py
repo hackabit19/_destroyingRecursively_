@@ -74,7 +74,7 @@ def do_something(text):
             x=0
             y=0
             for x1,y1,_1 in qr.scan(image):
-                x=x1,y=y1,_=_1
+                x=x1,y=y1,_=1
                 break
             cv2.circle(blank_image, (int(x), int(y)), 20 ,(0, 0, 255), 2)
             cv2.circle(blank_image, (int(x), int(y)), 5, (0, 255, 0), -1)
