@@ -109,7 +109,6 @@ def sticker_handler():
                 text = "MORE LEFT"
             print(text)
             tts.play_audio(text)
-        break
 
 def yolo_handler(name):
     print("Yolo Hanler {}".format(name))
