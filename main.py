@@ -112,7 +112,53 @@ def sticker_handler():
 
 def yolo_handler(name):
     print("Yolo Hanler {}".format(name))
-
+    points = []
+    while True:
+        rawCapture = PiRGBArray(camera)
+        camera.capture(rawCapture, format="bgr")
+        image = rawCapture.array
+        x=0
+        y=0
+        for searched,_,cen in darknet.detect(image):
+            if searched==name:
+                (x,y) = cen
+                break
+        points.append((x,y))
+        text = ""
+        Height, Width = image.shape[:2]
+        fifteen_per = 0.40*(Width/2)
+        centre_region_begin = Width/2-fifteen_per
+        centre_region_end = Width/2+fifteen_per
+        centre_region_begin_part2 = Width/2-2*fifteen_per
+        centre_region_end_part2 = Width/2+2*fifteen_per
+        if x==None or y==None:
+            if len(points)!=0:
+                (x,y) = points[-1]
+                if int(x)>centre_region_begin and int(x)<=centre_region_end:
+                    text = "NO CHANGE"
+                elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
+                    text = "RIGHT"
+                elif int(x)>centre_region_end_part2:
+                    text = "MORE RIGHT"
+                elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
+                    text = "LEFT"
+                elif int(x)<centre_region_begin_part2:
+                    text = "MORE LEFT"
+                print(text)
+                tts.play_audio(text)
+        else:
+            if int(x)>centre_region_begin and int(x)<=centre_region_end:
+                text = "NO CHANGE"
+            elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
+                text = "RIGHT"
+            elif int(x)>centre_region_end_part2:
+                text = "MORE RIGHT"
+            elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
+                text = "LEFT"
+            elif int(x)<centre_region_begin_part2:
+                text = "MORE LEFT"
+            print(text)
+            tts.play_audio(text)
 
 
 iter = 1
