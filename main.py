@@ -288,8 +288,8 @@ def yolo_handler(name):
 iter = 1
 user_command =  ""
 with ThreadPoolExecutor() as executor:
-    found_items = []
     while len(user_command) == 0:
+        found_items = []
         rawCapture = PiRGBArray(camera)
         camera.capture(rawCapture, format="bgr")
         image = rawCapture.array
