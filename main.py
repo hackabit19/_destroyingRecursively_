@@ -1,4 +1,4 @@
-rom darknet import Darknet
+from darknet import Darknet
 from qr import QR 
 from sticker import Sticker
 from picamera.array import PiRGBArray
@@ -192,21 +192,26 @@ def yolo_handler(name):
     print("Yolo Handler {}".format(name))
     points = []
     while True:
-        rawCapture = PiRGBArray(camera)
-        camera.capture(rawCapture, format="bgr")
-        image = rawCapture.array
-        x=0
-        y=0
-        arr, img = darknet.detect(image)
-        flag = 0
-        for (searched,_,cen) in arr:
-            if searched == name:
-                (x,y) = cen
-                flag = 1
-                break
-        if flag == 0:
-            print("Name not found")
-            exit(-1)
+        found = False
+        x = 0
+        y = 0
+        while found == False:
+            rawCapture = PiRGBArray(camera)
+            camera.capture(rawCapture, format="bgr")
+            image = rawCapture.array
+            arr, img = darknet.detect(image)
+            print("Yolo Handler {}: {}".format(name, arr))
+            flag = 0
+            for elem in arr:
+                print("{} {}".format(elem[0],name))
+                if str.lower(elem[0]) == str.lower(name):
+                    (x,y) = elem[2]
+                    found = True
+                    break
+                else:
+                    print("X: {} {}".format(elem[0], name))
+        
+       
         points.append((x,y))
         text = ""
         Height, Width = image.shape[:2]
@@ -219,6 +224,7 @@ def yolo_handler(name):
         centre_upper = Height/2+fifteen_up
         centre_down = Height/2-fifteen_up
         change = 0
+        print(x, y, "XY")
         if x==None or y==None:
             if len(points)!=0:
                 (x,y) = points[-1]
@@ -243,41 +249,37 @@ def yolo_handler(name):
                         text+=" AND DOWN"
                 if change==0:
                     if int(y)>centre_upper:
-                        text+="UP"
+                        text+=" UP"
                     elif int(y)<centre_down:
-                        text+="DOWN"
+                        text+=" DOWN"
                     print(text)
                     vibrators.set_profile(text)
                     tts.play_audio(text)
-            else:
-                if int(x)>centre_region_begin and int(x)<=centre_region_end:
-                    text = "NO CHANGE"
-                    vibrators.set_left(vibrators.OFF)
-                    vibrators.set_right(vibrators.OFF)
-                elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
-                    text = "RIGHT"
-                    vibrators.set_left(vibrators.OFF)
-                    vibrators.set_right(vibrators.OFF)
-                    change=1
-                elif int(x)>centre_region_end_part2:
-                    text = "MORE RIGHT"
-                    change=1
-                elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
-                    text = "LEFT"
-                    change=1
-                elif int(x)<centre_region_begin_part2:
-                    text = "MORE LEFT"
-                    change=1
-                if change==1:
-                    if int(y)>centre_upper:
-                        text+=" AND UP"
-                    elif int(y)<centre_down:
-                        text+=" AND DOWN"
-                if change==0:
-                    if int(y)>centre_upper:
-                        text+="UP"
-                    elif int(y)<centre_down:
-                        text+="DOWN"
+        else:
+            if int(x)>centre_region_begin and int(x)<=centre_region_end:
+                text = "NO CHANGE"
+            elif int(x)>centre_region_end and int(x)<=centre_region_end_part2:
+                text = "RIGHT"
+                change=1
+            elif int(x)>centre_region_end_part2:
+                text = "MORE RIGHT"
+                change=1
+            elif int(x)>=centre_region_begin_part2 and int(x)<=centre_region_begin:
+                text = "LEFT"
+                change=1
+            elif int(x)<centre_region_begin_part2:
+                text = "MORE LEFT"
+                change=1
+            if change==1:
+                if int(y)>centre_upper:
+                    text+=" AND UP"
+                elif int(y)<centre_down:
+                    text+=" AND DOWN"
+            if change==0:
+                if int(y)>centre_upper:
+                    text+=" UP"
+                elif int(y)<centre_down:
+                    text+=" DOWN"
             print(text)
             vibrators.set_profile(text)
             tts.play_audio(text)
@@ -298,21 +300,20 @@ with ThreadPoolExecutor() as executor:
 
         print("{} Darknet:".format(iter))
         print(p_darknet.result()[0])        
-        for name, _, _ in p_darknet.result()[0]:
+        for name, _, centers in p_darknet.result()[0]:
             if name not in found_items:
-                found_items.append(name)
+                found_items.append((name, centers[0], centers[1]))
         print("{} Sticker:".format(iter))
         print(p_sticker.result())
         if p_sticker.result()[0]:
-            found_items.append("Sticker Found")
-
+            found_items.append(("Sticker Found", p_sticker.result()[1], p_sticker.result()[2]))
         print("{} QR:".format(iter))
         for x, y, data in p_qr.result():
             print(x, y, data)
             if data not in found_items:
-                found_items.append(data)
+                found_items.append((data, x, y))
 
-        for name in found_items:
+        for name, x, y in found_items:
             tts.play_audio(name)
 
         iter += 1
@@ -325,4 +326,18 @@ with ThreadPoolExecutor() as executor:
     elif user_command == "sticker":
         sticker_handler()
     else:
-        yolo_handler(user_command)
+        closest_match = found_items[0][0]
+        max_score = 0
+        for ch in closest_match:
+            if ch in user_command:
+                max_score += 1
+        for string, x, y in found_items:
+            score = 0
+            for ch in string:
+                if ch in user_command:
+                    score += 1
+            if score > max_score:
+                max_score = score
+                closest_match = string
+
+        yolo_handler(closest_match)

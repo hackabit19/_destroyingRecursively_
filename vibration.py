@@ -33,3 +33,11 @@ class Vibrators:
         if profile in self.profiles:
             self.set_left(self.profiles[profile][0])
             self.set_right(self.profiles[profile][1])
+        else:
+            print("Unsupported Profile")
+
+if __name__ == "__main__":
+    v = Vibrators()
+    v.set_profile("LEFT")
+    sleep(3)
+    v.set_profile("NO CHANGE")
