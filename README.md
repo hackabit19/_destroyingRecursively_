@@ -1,5 +1,6 @@
 # The Blind Guide
 Team Name: ​_destroyingRecursively_
+
 Members: ​Saksham Arora, Sayan Sengupta, Ankur Dubey
 
 # The Challenge:
@@ -44,13 +45,14 @@ there are many objects that a user may interact with on a daily basis, like a
 smartphone. We can place special stickers on these objects to facilitate their
 tracking. The sticker would be rectangular, and divided into 4 quadrants. Each
 quadrant is assigned a specific color, for example Red Green Blue Yellow.
+
 Using such an approach has two benefits
 
-a) Instead of object detection, we can detect patches of colors in the video. Detecting
+1) Instead of object detection, we can detect patches of colors in the video. Detecting
 patches of colors is a simpler problem than object detection, so it can be used as a
 fallback if the Model is unable to detect the said object.
 
-b) While the probability of each color appearing separately in a frame at different points
+2) While the probability of each color appearing separately in a frame at different points
 is quite high, the probability of all four colors appearing in a quadrant is much lower,
 which is what we plan to use to detect the stickers.
 In this mode the user will be informed of any sticker labeled objects in front of him/her and
