@@ -1,9 +1,11 @@
 # The Blind Guide
 Team Name: ​_destroyingRecursively_
 
-Members: ​Saksham Arora, Sayan Sengupta, Ankur Dubey
+Members: [​Saksham Arora](https://github.com/saksham20189575/), [Sayan Sengupta](https://github.com/S-CRACKER) and  [Ankur Dubey](https://github.com/ankurdubey)
 
-# The Challenge:
+We built this project during **Hack-A-Bit 19**, and were awarded the **3rd Prize (2nd Runner Ups)**
+
+## The Challenge:
 Blind People on a daily basis struggle with finding common objects in their environment.
 They must memorize the location of every obstacle or item in their home environment.
 Objects like beds, tables and chairs must not be moved without warning to prevent
@@ -21,7 +23,7 @@ the user.
 3) A vibrator motor mounted in the glove for haptic feedback.
 4) A Raspberry Pi for processing data.
 
-# Working:
+## Working:
 Video from the camera is used to determine a list of objects in the direction the user is
 pointing (in front of his palm), and each object’s relative position (for eg., top down wrt the
 user’s palm). This is achieved by using a Real Time Object Detection Model such as YOLO
@@ -58,7 +60,10 @@ which is what we plan to use to detect the stickers.
 In this mode the user will be informed of any sticker labeled objects in front of him/her and
 then directed to it using the same procedure as described in (1), if the user chooses to.
 
-# Value Proposition:
+## Value Proposition:
 1) The device would help the blind interact with their surroundings in a more efficient way.
 2) Once setup, they can independently reach and interact with objects they want.
 3) This can also be used to safely explore unknown surroundings.
+
+## Pictures
+<img src="pictures/1.jpeg" height="250" width="250"> | <img src="pictures/2.jpeg" height="250" width="250"> | <img src="pictures/3.jpeg" height="250" width="250">
