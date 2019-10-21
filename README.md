@@ -1,7 +1,10 @@
 # The Blind Guide
 Team Name: ​_destroyingRecursively_
 
-Members: ​Saksham Arora, Sayan Sengupta, Ankur Dubey
+Members: [​Saksham Arora](https://github.com/saksham20189575/), [Sayan Sengupta](https://github.com/S-CRACKER) and  [Ankur Dubey](https://github.com/ankurdubey)
+
+We built this project during Hack-A-Bit 19, and were awarded the 3rd Prize (2nd Runner Ups)
+
 
 # The Challenge:
 Blind People on a daily basis struggle with finding common objects in their environment.
@@ -62,3 +65,6 @@ then directed to it using the same procedure as described in (1), if the user ch
 1) The device would help the blind interact with their surroundings in a more efficient way.
 2) Once setup, they can independently reach and interact with objects they want.
 3) This can also be used to safely explore unknown surroundings.
+
+# Pictures
+<img src="Pictures/1.jpeg" height="250" width="250"> | <img src="Pictures/2.jpeg" height="250" width="250"> | <img src="Pictures/3.jpeg" height="250" width="250">
